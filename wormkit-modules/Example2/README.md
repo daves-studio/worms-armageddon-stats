@@ -1,0 +1,1 @@
+Pops up message on injection. Then pops up a message every 4 seconds.

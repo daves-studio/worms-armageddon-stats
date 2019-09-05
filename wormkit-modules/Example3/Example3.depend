@@ -1,0 +1,23 @@
+# depslib dependency file v1.0
+1567633585 source:d:\wormsdlls\example2\main.cpp
+	<windows.h>
+
+1567709018 source:d:\wormsdlls\example3\guicon.cpp
+	<windows.h>
+	<stdio.h>
+	<fcntl.h>
+	<io.h>
+	<iostream>
+	<fstream>
+
+1567710737 source:d:\wormsdlls\example3\main.cpp
+	<windows.h>
+	<fstream>
+	<stdio.h>
+	<stdlib.h>
+	"guicon.h"
+	<iostream>
+	<sstream>
+
+1567709077 d:\wormsdlls\example3\guicon.h
+
