@@ -14,7 +14,20 @@ using address_t = long unsigned int;
 bool bInLogMode = false;
 
 extern "C" {
+
 void on_message(char* msg) { printf("message: %s\n", msg); }
+
+void on_start(worm_info* wi) {
+  printf("start: worm: %s, team: %s\n", wi->name, wi->team);
+}
+
+void on_death(worm_info* wi) {
+  printf("death: worm: %s, team: %s\n", wi->name, wi->team);
+}
+
+void on_drown(worm_info* wi) {
+  printf("drown: worm: %s, team: %s\n", wi->name, wi->team);
+}
 }
 
 static bool writeMemory(DWORD_PTR dwAddress, const void* cpvPatch,
@@ -76,6 +89,9 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwMsg, LPVOID lpReserved) {
 
       if (bInLogMode) {
         patch_call(0x004e67bb, (address_t)&hook_message);
+        patch_call(0x004ea1ac, (address_t)&hook_start);
+        patch_call(0x004ee4b1, (address_t)&hook_death);
+        patch_call(0x004edaf7, (address_t)&hook_drown);
       }
 #ifndef NDEBUG
       MessageBox(0, "Dll Injection Successful! (DEBUG)", "Dll Injector",
