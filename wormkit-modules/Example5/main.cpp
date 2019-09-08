@@ -9,6 +9,8 @@ using namespace std;
 #include "guicon.h"
 #include "hooks.hpp"
 
+using address_t = long unsigned int;
+
 bool bInLogMode = false;
 
 extern "C" {
@@ -26,6 +28,13 @@ static bool writeMemory(DWORD_PTR dwAddress, const void* cpvPatch,
 
   return VirtualProtect((void*)dwAddress, dwSize, dwProtect,
                         new DWORD);  // Reprotect the memory
+}
+
+void patch_call(address_t call_addr, address_t hook) {
+  uint32_t relative = (hook - call_addr) - 5;
+
+  writeMemory(call_addr, "\xE8", 1);         // call
+  writeMemory(call_addr + 1, &relative, 4);  // relative address to hook func
 }
 
 static void getWAMode() {
@@ -66,11 +75,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwMsg, LPVOID lpReserved) {
 #endif
 
       if (bInLogMode) {
-        int hookAddress = reinterpret_cast<int>(&hook_message);
-        int relative = (hookAddress - 0x004e67bb) - 5;
-
-        writeMemory(0x004e67bb, "\xE8", 1);     // call
-        writeMemory(0x004e67bc, &relative, 4);  // relative address to hook func
+        patch_call(0x004e67bb, (address_t)&hook_message);
       }
 #ifndef NDEBUG
       MessageBox(0, "Dll Injection Successful! (DEBUG)", "Dll Injector",
