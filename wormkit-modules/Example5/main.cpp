@@ -15,18 +15,35 @@ bool bInLogMode = false;
 
 extern "C" {
 
-void on_message(char* msg) { printf("message: %s\n", msg); }
+game* g = NULL;
+
+void on_construct(game* constructed_game) {
+  printf("on_construct\n");
+  g = constructed_game;
+}
+
+double get_time() {
+  if (g != NULL)
+    return (double)g->holds_time->frames / 50.0;
+  else
+    return 0.0f;
+}
+
+void on_message(char* msg) { printf("message at %f: %s\n", get_time(), msg); }
 
 void on_start(worm_info* wi) {
-  printf("start: worm: %s, team: %s\n", wi->name, wi->team);
+  printf("start: worm: %s, team: %s, time: %f\n", wi->name, wi->team,
+         get_time());
 }
 
 void on_death(worm_info* wi) {
-  printf("death: worm: %s, team: %s\n", wi->name, wi->team);
+  printf("death: worm: %s, team: %s, time: %f\n", wi->name, wi->team,
+         get_time());
 }
 
 void on_drown(worm_info* wi) {
-  printf("drown: worm: %s, team: %s\n", wi->name, wi->team);
+  printf("drown: worm: %s, team: %s, time: %f\n", wi->name, wi->team,
+         get_time());
 }
 }
 
@@ -92,6 +109,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwMsg, LPVOID lpReserved) {
         patch_call(0x004ea1ac, (address_t)&hook_start);
         patch_call(0x004ee4b1, (address_t)&hook_death);
         patch_call(0x004edaf7, (address_t)&hook_drown);
+        patch_call(0x004fe0d1, (address_t)&hook_construct);
       }
 #ifndef NDEBUG
       MessageBox(0, "Dll Injection Successful! (DEBUG)", "Dll Injector",

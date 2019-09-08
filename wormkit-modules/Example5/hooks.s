@@ -61,3 +61,20 @@ _hook_drown:
 
   push $0x004e6750
   ret
+
+.global _hook_construct
+.global _on_construct
+
+_hook_construct:
+  pushal
+
+  // 32 for pushal + 4 for return address
+  movl 36(%esp), %eax
+  push %eax
+  call _on_construct
+
+  addl $4, %esp
+  popal
+
+  push $0x0052da40
+  ret
