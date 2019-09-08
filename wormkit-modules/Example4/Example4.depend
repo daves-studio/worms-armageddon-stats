@@ -49,3 +49,22 @@
 	<stdio.h>
 	<limits.h>
 
+1567709018 source:c:\users\tom\workspace\wormstats\wormkit-modules\example4\guicon.cpp
+	<windows.h>
+	<stdio.h>
+	<fcntl.h>
+	<io.h>
+	<iostream>
+	<fstream>
+
+1567819102 source:c:\users\tom\workspace\wormstats\wormkit-modules\example4\main.cpp
+	<windows.h>
+	<fstream>
+	<stdio.h>
+	<stdlib.h>
+	"guicon.h"
+	<iostream>
+	<sstream>
+
+1567709077 c:\users\tom\workspace\wormstats\wormkit-modules\example4\guicon.h
+
