@@ -3,9 +3,6 @@
 .global _hook_message
 .global _on_message
 
-/* _patch_start: */
-/*     call wrapper */
-
 _hook_message:
   pushal
 
