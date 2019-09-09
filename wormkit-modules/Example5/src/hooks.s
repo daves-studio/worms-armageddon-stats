@@ -78,3 +78,24 @@ _hook_construct:
 
   push $0x0052da40
   ret
+
+.global _hook_play_sound
+.global _on_play_sound
+
+_hook_play_sound:
+  pushal
+
+  // 32 for pushal + 4 for return address
+  movl 36(%esp), %eax
+  push %eax
+  call _on_play_sound
+
+  addl $4, %esp
+  popal
+
+  // instructions replaced/skipped over by patch
+  mov    0x34(%ecx),%eax
+  mov    0x8078(%eax),%edx
+
+  push $0x0051aa79
+  ret

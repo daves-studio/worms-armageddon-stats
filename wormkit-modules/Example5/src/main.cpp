@@ -45,6 +45,13 @@ void on_drown(worm_info* wi) {
   printf("drown: worm: %s, team: %s, time: %f\n", wi->name, wi->team,
          get_time());
 }
+
+void on_rope_attach() { printf("rope attach: time: %f\n", get_time()); }
+
+void on_play_sound(int sound) {
+  printf("sound: sound: %d, time: %f\n", sound, get_time());
+  if (sound == 87) on_rope_attach();
+}
 }
 
 static bool writeMemory(DWORD_PTR dwAddress, const void* cpvPatch,
@@ -65,6 +72,13 @@ void patch_call(address_t call_addr, address_t hook) {
 
   writeMemory(call_addr, "\xE8", 1);         // call
   writeMemory(call_addr + 1, &relative, 4);  // relative address to hook func
+}
+
+void patch_jmp(address_t jmp_addr, address_t hook) {
+  uint32_t relative = (hook - jmp_addr) - 5;
+
+  writeMemory(jmp_addr, "\xE9", 1);         // jmp
+  writeMemory(jmp_addr + 1, &relative, 4);  // relative address to hook func
 }
 
 static void getWAMode() {
@@ -110,6 +124,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwMsg, LPVOID lpReserved) {
         patch_call(0x004ee4b1, (address_t)&hook_death);
         patch_call(0x004edaf7, (address_t)&hook_drown);
         patch_call(0x004fe0d1, (address_t)&hook_construct);
+        patch_jmp(0x0051aa70, (address_t)&hook_play_sound);
       }
 #ifndef NDEBUG
       MessageBox(0, "Dll Injection Successful! (DEBUG)", "Dll Injector",
