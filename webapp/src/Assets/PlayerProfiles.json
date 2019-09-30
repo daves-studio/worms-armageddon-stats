@@ -1,0 +1,79 @@
+{
+    "Tomn": {
+        "name": "Tom N",
+        "style": "A bit ropey",
+        "faveweapon": "Super banana bomb",
+        "bio": "Why does Tom like flinging himself into the sea? We will probably never know",
+        "quote": "In the sea in the sea! oh i went in the sea...",
+        "team": "Biddy, worm2, worm3, worm4",
+        "src": "./Worms1.png"
+      },
+      "Alice": {
+        "name": "Alice",
+        "style": "Statsy",
+        "faveweapon": "Sheep on a rope",
+        "bio": "Alice trained in the mountains to become master of worms armegeddon. It didn't seem to help",
+        "quote": "If in doubt baseball bat",
+        "team": "Ether Trogg, Betty, worm3, worm4",
+        "src": "./Worms1.png"
+      },
+      "TomP": {
+        "name": "Tom P",
+        "style": "Anti Mark",
+        "faveweapon": "Girders",
+        "bio": "Tom trains local worms to fight at charitable events",
+        "quote": "You can never have enough girders",
+        "team": "Glorious Dave, Dave, other dave type worms"
+      },
+      "Mark": {
+        "name": "Mark",
+        "style": "Anti Tom",
+        "faveweapon": "Holy Hand grenade",
+        "bio": "",
+        "quote": "one girder is too many girders",
+        "team": "Girder Kit, all the girders, other girder type worms"
+      },
+      "Craig": {
+        "name": "Craig aka Greg aka Gregory",
+        "style": "aquatic",
+        "faveweapon": "is a ninja rope a weapon?",
+        "bio": "Craig carb loads before major tournaments for increased stamina",
+        "quote": "oh no oh no I ran out of time :(",
+        "team": "Scuba Dave, others"
+      },
+      "Natasha": {
+        "name": "Cheggers-Natasha",
+        "style": "Sneaky",
+        "faveweapon": "Holy Hand Grenade",
+        "bio": "Natasha teaches worms how to code in python so they can feel better about themselves",
+        "quote": "oh did I accidently press spacebar on your turn??",
+        "team": "some worms!"
+      },
+      "Todd": {
+        "name": "Todd",
+        "style": "Defensive",
+        "faveweapon": "Blow torch",
+        "bio": "",
+        "quote": "runaway!",
+        "team": "some worms!"
+      },
+      "Kristian": {
+        "name": "Kristian",
+        "style": "Advanced",
+        "faveweapon": "",
+        "bio": "Kristian definietly practices in his spare time - no one is that naturally good at ninja roping",
+        "quote": "",
+        "team": "Lemon and Lime, plus others"
+      },
+      "Andy": {
+        "name": "Andy",
+        "style": "",
+        "faveweapon": "",
+        "bio": "",
+        "quote": "",
+        "team": "some worms"
+      }
+    }
+
+
+    
