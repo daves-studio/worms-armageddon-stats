@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
+#include <cassert>
 #include <fstream>
 using namespace std;
 #include <iostream>
@@ -70,8 +71,9 @@ static bool writeMemory(DWORD_PTR dwAddress, const void* cpvPatch,
 void patch_call(address_t call_addr, address_t hook) {
   uint32_t relative = (hook - call_addr) - 5;
 
-  writeMemory(call_addr, "\xE8", 1);         // call
-  writeMemory(call_addr + 1, &relative, 4);  // relative address to hook func
+  assert(writeMemory(call_addr, "\xE8", 1));  // call
+  assert(writeMemory(call_addr + 1, &relative,
+                     4));  // relative address to hook func
 }
 
 void patch_jmp(address_t jmp_addr, address_t hook) {
