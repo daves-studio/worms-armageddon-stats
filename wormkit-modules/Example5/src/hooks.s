@@ -99,3 +99,34 @@ _hook_play_sound:
 
   push $0x0051aa79
   ret
+
+.global _hook_frame
+.global _on_frame
+
+_hook_frame:
+  pushal
+
+  call _on_frame
+
+  popal
+
+  push $0x00509160
+  ret
+
+.global _hook_loop
+.global _on_loop
+
+_hook_loop:
+  pushal
+
+  call _on_loop
+
+  popal
+
+  // instructions replaced/skipped over by patch
+  push %ebp
+  mov %esp,%ebp
+  and $0xfffffff8,%esp
+
+  push $0x004ff8e6
+  ret

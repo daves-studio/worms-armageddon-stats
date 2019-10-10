@@ -9,4 +9,6 @@ extern void hook_death(worm_info *wi);
 extern void hook_drown(worm_info *wi);
 extern void hook_construct(game *g);
 extern void hook_play_sound();
+extern void hook_frame();
+extern void hook_loop();
 }

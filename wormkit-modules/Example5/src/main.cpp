@@ -129,6 +129,12 @@ void on_play_sound(int sound) {
     });
   if (sound == 87) on_rope_attach();
 }
+
+void on_frame() {
+  printf("frame: time: %f thread: %d\n", get_time(), GetCurrentThreadId());
+}
+
+void on_loop() { printf("loop thread: %d\n", GetCurrentThreadId()); }
 }
 
 static bool writeMemory(DWORD_PTR dwAddress, const void* cpvPatch,
@@ -197,6 +203,8 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwMsg, LPVOID lpReserved) {
         patch_call(0x004edaf7, (address_t)&hook_drown);
         patch_call(0x004fe0d1, (address_t)&hook_construct);
         patch_jmp(0x0051aa70, (address_t)&hook_play_sound);
+        patch_call(0x004ffede, (address_t)&hook_frame);
+        patch_jmp(0x004ff8e0, (address_t)&hook_loop);
       }
 
       if (debug_break) __asm__("int3");
