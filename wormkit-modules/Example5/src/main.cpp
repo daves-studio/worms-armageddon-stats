@@ -19,12 +19,21 @@ FILE** log_file = (FILE**)0x008fc8f8;
 
 bool bInLogMode = false;
 
+// enable debug printing
+const bool debug_print = false;
+// enable message box before and after hooks
+const bool debug_msgbox = false;
+// break into debugger after hooking
+const bool debug_break = false;
+// call RedirectIOToConsole?
+const bool redirect_io = false;
+
 extern "C" {
 
 game* g = NULL;
 
 void on_construct(game* constructed_game) {
-  printf("on_construct\n");
+  if (debug_print) printf("on_construct\n");
   g = constructed_game;
 }
 
@@ -94,15 +103,10 @@ static void getWAMode() {
   int i;
 
   szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
-  if (NULL == szArglist) {
-    printf("CommandLineToArgvW failed\n");
-    exit(1);
-  } else {
-    for (i = 0; i < nArgs; i++) {
-      if (wcscmp(L"/getlog", szArglist[i]) == 0) {
-        bInLogMode = true;
-      }
-      std::wcout << i << ": " << szArglist[i] << std::endl;
+  assert(szArglist);
+  for (i = 0; i < nArgs; i++) {
+    if (wcscmp(L"/getlog", szArglist[i]) == 0) {
+      bInLogMode = true;
     }
   }
 
@@ -114,16 +118,15 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwMsg, LPVOID lpReserved) {
   switch (dwMsg) {
     case DLL_PROCESS_ATTACH:
       DisableThreadLibraryCalls(hModule);
-#ifndef NDEBUG
-      RedirectIOToConsole();
-#endif
+      if (redirect_io) RedirectIOToConsole();
+
       getWAMode();
 
-#ifndef NDEBUG
-      std::cout << "Generating Logs: " << bInLogMode << std::endl;
-      MessageBox(0, "Dll Injection Successful! (DEBUG)", "Dll Injector",
-                 MB_ICONEXCLAMATION | MB_OK);
-#endif
+      if (debug_print)
+        std::cout << "Generating Logs: " << bInLogMode << std::endl;
+      if (debug_msgbox)
+        MessageBox(0, "Dll Injection Successful! (DEBUG)", "Dll Injector",
+                   MB_ICONEXCLAMATION | MB_OK);
 
       if (bInLogMode) {
         patch_call(0x004e67bb, (address_t)&hook_message);
@@ -133,10 +136,11 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwMsg, LPVOID lpReserved) {
         patch_call(0x004fe0d1, (address_t)&hook_construct);
         patch_jmp(0x0051aa70, (address_t)&hook_play_sound);
       }
-#ifndef NDEBUG
-      MessageBox(0, "Dll Injection Successful! (DEBUG)", "Dll Injector",
-                 MB_ICONEXCLAMATION | MB_OK);
-#endif
+
+      if (debug_break) __asm__("int3");
+      if (debug_msgbox)
+        MessageBox(0, "Dll Injection Successful! (DEBUG)", "Dll Injector",
+                   MB_ICONEXCLAMATION | MB_OK);
       return TRUE;
       break;
     case DLL_PROCESS_DETACH:
