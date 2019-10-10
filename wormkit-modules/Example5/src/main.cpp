@@ -9,6 +9,8 @@ using namespace std;
 #include <sstream>
 #include "guicon.h"
 #include "hooks.hpp"
+#include "json11.hpp"
+using Json = json11::Json;
 
 using address_t = long unsigned int;
 
@@ -37,34 +39,94 @@ void on_construct(game* constructed_game) {
   g = constructed_game;
 }
 
-double get_time() {
+int get_frames() {
   if (g != NULL)
-    return (double)g->holds_time->frames / 50.0;
+    return g->holds_time->frames;
   else
-    return 0.0f;
+    return 0;
 }
 
-void on_message(char* msg) { printf("message at %f: %s\n", get_time(), msg); }
+double get_time() {
+  return (double)get_frames() / 50.0;
+}
+
+void write_log_json(const Json& json) {
+  std::string json_str = json.dump();
+  (*_fprintf)(*log_file, "%s\n", json_str.c_str());
+}
+
+void on_message(char* msg) {
+  if (debug_print) printf("message at %f: %s\n", get_time(), msg);
+
+  if (bInLogMode)
+    write_log_json(Json::object{
+        {"type", "message"},
+        {"frames", get_frames()},
+        {"message", msg},
+    });
+}
 
 void on_start(worm_info* wi) {
-  printf("start: worm: %s, team: %s, time: %f\n", wi->name, wi->team,
-         get_time());
+  if (debug_print)
+    printf("start: worm: %s, team: %s, time: %f\n", wi->name, wi->team,
+           get_time());
+
+  if (bInLogMode)
+    write_log_json(Json::object{
+        {"type", "start"},
+        {"frames", get_frames()},
+        {"worm", wi->name},
+        {"team", wi->team},
+    });
 }
 
 void on_death(worm_info* wi) {
-  printf("death: worm: %s, team: %s, time: %f\n", wi->name, wi->team,
-         get_time());
+  if (debug_print)
+    printf("death: worm: %s, team: %s, time: %f\n", wi->name, wi->team,
+           get_time());
+
+  if (bInLogMode)
+    write_log_json(Json::object{
+        {"type", "death"},
+        {"frames", get_frames()},
+        {"worm", wi->name},
+        {"team", wi->team},
+    });
 }
 
 void on_drown(worm_info* wi) {
-  printf("drown: worm: %s, team: %s, time: %f\n", wi->name, wi->team,
-         get_time());
+  if (debug_print)
+    printf("drown: worm: %s, team: %s, time: %f\n", wi->name, wi->team,
+           get_time());
+
+  if (bInLogMode)
+    write_log_json(Json::object{
+        {"type", "drown"},
+        {"frames", get_frames()},
+        {"worm", wi->name},
+        {"team", wi->team},
+    });
 }
 
-void on_rope_attach() { printf("rope attach: time: %f\n", get_time()); }
+void on_rope_attach() {
+  if (debug_print) printf("rope attach: time: %f\n", get_time());
+
+  if (bInLogMode)
+    write_log_json(Json::object{
+        {"type", "rope_attach"},
+        {"frames", get_frames()},
+    });
+}
 
 void on_play_sound(int sound) {
-  printf("sound: sound: %d, time: %f\n", sound, get_time());
+  if (debug_print) printf("sound: sound: %d, time: %f\n", sound, get_time());
+
+  if (bInLogMode)
+    write_log_json(Json::object{
+        {"type", "sound"},
+        {"frames", get_frames()},
+        {"sound_id", sound},
+    });
   if (sound == 87) on_rope_attach();
 }
 }
