@@ -12,6 +12,11 @@ using namespace std;
 
 using address_t = long unsigned int;
 
+typedef int (**fprintf_ptr)(FILE* stream, const char* format, ...);
+fprintf_ptr _fprintf = (fprintf_ptr)0x0061c510;
+
+FILE** log_file = (FILE**)0x008fc8f8;
+
 bool bInLogMode = false;
 
 extern "C" {
